@@ -1,0 +1,27 @@
+start.sh futtatása előtt:
+1. swagger->openapi.yaml beállítása (ha kaptunk ilyet)
+
+git beállíása:
+1. git config user.name "Hubina Balázs"
+2. git config user.email "hubinab@gmail.com"
+
+php artisan parancsok:
+0. belépés a backend konténer shelljébe:
+    docker compose exec backend fish
+
+1. API létrehozása:
+    php artisan install:api
+
+2. "tábla"(model) létrehozása -m=model, -c=kontroller, -R=requests --api=API resource kontroller létrehozása
+Segítség: php artisan help make:model
+    php artisan make:model Panda -mcR --api
+
+3. Ha kész a create table migrations, akkor
+    php artisan migrate:refresh
+
+4. Seeder fájl bemásolása/létrehozása, és a DatabaseSeeder.php-ba a $this->call() után a seed futtatása
+Itt a fresh mindent előről épít fel!!
+    php artisan migrate:fresh --seed
+
+5. resorce létrehozása, hogy mit adjon vissza az API
+    php artisan make:resource PandaResource
