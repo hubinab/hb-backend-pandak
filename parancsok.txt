@@ -12,7 +12,7 @@ php artisan parancsok:
 1. API létrehozása:
     php artisan install:api
 
-2. "tábla"(model) létrehozása -m=model, -c=kontroller, -R=requests --api=API resource kontroller létrehozása
+2. "tábla"(model) létrehozása -m=migration, -c=kontroller, -R=requests --api=API resource kontroller létrehozása
 Segítség: php artisan help make:model
     php artisan make:model Panda -mcR --api
 
