@@ -2,4 +2,4 @@
 .env
 .DS_Store
 pandak.zip
-./vscode
+/.vscode
