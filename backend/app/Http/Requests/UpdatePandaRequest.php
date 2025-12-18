@@ -11,7 +11,7 @@ class UpdatePandaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdatePandaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name" => ["required", "string", "between:1,40"],
+            "sex" => ["required", "string", "in:M,F"],
+            "birth" => ["nullable", "date"],
         ];
     }
 }

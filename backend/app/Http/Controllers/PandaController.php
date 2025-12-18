@@ -17,7 +17,9 @@ class PandaController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-        
+
+        $pandas = Panda::query();
+
         $orderBys = [null, 'name', 'age'];
         if (!in_array($orderBy = $request->query('orderBy'),$orderBys))
             abort(404);
@@ -28,7 +30,7 @@ class PandaController extends Controller
 
         if ($orderBy !== null && $order === null)
             abort(404);
-        
+
         // Ha kor szerint kell, akkor az adatbazisban a 
         // birth szerint kell, de forditva, mert minel
         // korabban szuletett valaki, annal idosebb
@@ -39,12 +41,11 @@ class PandaController extends Controller
                 $order = 'desc';
             else 
                 $order = 'asc';
+            $pandas = $pandas->where("birth", "<>", null);
         }
 
-        if ($orderBy === null) 
-            $pandas = Panda::query();
-        else
-            $pandas = Panda::query()->orderBy($orderBy, $order);
+        if ($orderBy !== null) 
+            $pandas = $pandas->orderBy($orderBy, $order);
 
         return PandaResource::collection($pandas->get());
     }
@@ -52,9 +53,9 @@ class PandaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePandaRequest $request)
+    public function store(StorePandaRequest $request): JsonResource
     {
-        //
+        return new PandaResource(Panda::create($request->validated()));
     }
 
     /**
@@ -70,7 +71,9 @@ class PandaController extends Controller
      */
     public function update(UpdatePandaRequest $request, Panda $panda)
     {
-        //
+        $data = $request->validated();
+        $panda->update($data);
+        return new PandaResource($panda);
     }
 
     /**
