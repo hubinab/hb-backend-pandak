@@ -34,7 +34,7 @@ class PandaController extends Controller
         // Ha kor szerint kell, akkor az adatbazisban a 
         // birth szerint kell, de forditva, mert minel
         // korabban szuletett valaki, annal idosebb
-        // (hogy baszna meg az Isten!)
+        
         if ($orderBy === 'age') {
             $orderBy = 'birth';
             if ($order == 'asc') 
