@@ -6,8 +6,8 @@ use App\Http\Requests\StorePandaRequest;
 use App\Http\Requests\UpdatePandaRequest;
 use App\Http\Resources\PandaResource;
 use App\Models\Panda;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceResponse;
 use Illuminate\Http\Response;
 
 class PandaController extends Controller
@@ -15,10 +15,38 @@ class PandaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResource
+    public function index(Request $request): JsonResource
     {
-        $pandas = Panda::all();
-        return PandaResource::collection($pandas);
+        
+        $orderBys = [null, 'name', 'age'];
+        if (!in_array($orderBy = $request->query('orderBy'),$orderBys))
+            abort(404);
+
+        $orders = [null, 'asc', 'desc'];
+        if (!in_array($order = $request->query('order'), $orders))
+            abort(404);
+
+        if ($orderBy !== null && $order === null)
+            abort(404);
+        
+        // Ha kor szerint kell, akkor az adatbazisban a 
+        // birth szerint kell, de forditva, mert minel
+        // korabban szuletett valaki, annal idosebb
+        // (hogy baszna meg az Isten!)
+        if ($orderBy === 'age') {
+            $orderBy = 'birth';
+            if ($order == 'asc') 
+                $order = 'desc';
+            else 
+                $order = 'asc';
+        }
+
+        if ($orderBy === null) 
+            $pandas = Panda::query();
+        else
+            $pandas = Panda::query()->orderBy($orderBy, $order);
+
+        return PandaResource::collection($pandas->get());
     }
 
     /**

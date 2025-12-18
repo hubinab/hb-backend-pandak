@@ -9,4 +9,4 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::apiResource("/pandas",PandaController::class)
-    ->only(["index","show","destroy"]);
+    ;
