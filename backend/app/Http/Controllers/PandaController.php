@@ -17,37 +17,30 @@ class PandaController extends Controller
      */
     public function index(Request $request): JsonResource
     {
-
         $pandas = Panda::query();
 
-        $orderBys = [null, 'name', 'age'];
-        if (!in_array($orderBy = $request->query('orderBy'),$orderBys))
+        if (!in_array($orderBy = $request->query('orderBy'), [null, 'name', 'age']))
             abort(404);
 
-        $orders = [null, 'asc', 'desc'];
-        if (!in_array($order = $request->query('order'), $orders))
+        if (!in_array($order = $request->query('order'), [null, 'asc', 'desc']))
             abort(404);
-
-        if ($orderBy !== null && $order === null)
-            abort(404);
-
-        // Ha kor szerint kell, akkor az adatbazisban a 
-        // birth szerint kell, de forditva, mert minel
-        // korabban szuletett valaki, annal idosebb
         
-        if ($orderBy === 'age') {
-            $orderBy = 'birth';
-            if ($order == 'asc') 
-                $order = 'desc';
-            else 
-                $order = 'asc';
-            $pandas = $pandas->where("birth", "<>", null);
-        }
+        if ($orderBy !== null) {
 
-        if ($orderBy !== null) 
+            $order = $order ?? 'asc';
+            // Ha kor szerint kell, akkor az adatbazisban a 
+            // birth szerint kell, de forditva, mert minnel
+            // korabban szuletett valaki, annal idosebb
+            if ($orderBy === 'age') {
+                $orderBy = 'birth';
+                $order = $order === 'asc' ? 'desc' : 'asc';
+                $pandas = $pandas->where("birth", "<>", null);
+            }
             $pandas = $pandas->orderBy($orderBy, $order);
-
-        return PandaResource::collection($pandas->get());
+            return PandaResource::collection($pandas->get());
+        }
+        else
+            return PandaResource::collection(Panda::all());
     }
 
     /**
