@@ -12,11 +12,10 @@ const title = import.meta.env.VITE_APP_NAME
 
 const links = [
   {
-    label: 'Page',
-    to: '#'
+    label: 'Új panda',
+    to: { name: 'pandas.create' }
   }
-]
-</script>
+]</script>
 
 <template>
   <header class="bg-white">

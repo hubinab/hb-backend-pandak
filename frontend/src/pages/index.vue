@@ -1,16 +1,37 @@
 <script setup>
 import BaseLayout from '@layouts/BaseLayout.vue'
-import { useCounter } from '@stores/CounterStore.mjs'
+import PandaFilter from '@/components/panda/PandaFilter.vue'
+import PandaCard from '@/components/panda/PandaCard.vue'
+import { usePandaStore } from '@/stores/PandaStore.mjs'
+import { onMounted } from 'vue'
 
-const counter = useCounter()
+const store = usePandaStore()
+
+onMounted(() => {
+  store.getPandas()
+})
 </script>
 
 <template>
   <BaseLayout>
-    <h1 class="text-6xl my-10">Hello!</h1>
-    <button class="bg-blue-500 text-white rounded py-2 px-4" @click="counter.increment()">
-      Számláló: {{ counter.counter }}
-    </button>
+    <!-- Kereső -->
+    <PandaFilter class="my-6" />
+
+    <!-- Grid -->
+    <div
+      class="grid gap-6
+             grid-cols-1
+             md:grid-cols-2
+             xl:grid-cols-4
+             py-4"
+    >
+      <PandaCard
+        v-for="panda in store.filteredPandas"
+        :key="panda.id"
+        :id="panda.id"
+        :name="panda.name"
+      />
+    </div>
   </BaseLayout>
 </template>
 
